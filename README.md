@@ -10,7 +10,7 @@ Este proyecto se puede utilizar como base para desarrollar aplicaciones de difer
 
 ### Objetivos
 
-El objetivo de este proyecto es proporcionar una arquitectura de sistema adecuada para aplicaciones que requieran una alta escalabilidad y un alto rendimiento. Para ello, se ha utilizado la arquitectura CQRS (Command Query Responsibility Segregation) en conjunto con PostgreSQL para las escrituras y Redis para las lecturas.
+El objetivo de este proyecto es proporcionar una arquitectura de sistema adecuada para aplicaciones que requieran una alta escalabilidad y un alto rendimiento. Para ello, se ha utilizado la arquitectura CQRS (Command Query Responsibility Segregation) en conjunto con una arquitecura hexagonal usando PostgreSQL como base de datos relacional para las escrituras y Redis, una base de datos en memoria, para las lecturas.
 
 Además, se ha implementado una integración con Debezium para transmitir eventos a Kafka cada vez que se escriba en la base de datos PostgreSQL. De esta manera, se puede tener una visibilidad en tiempo real de las operaciones de escritura en la base de datos y proveer de un mecanismo para solventar la consistencia eventual en la base de datos de lectura.
 
@@ -49,3 +49,10 @@ graph LR;
     Kafka-->SpringBoot_KafkaListener
     SpringBoot_KafkaListener-->|Write Projections|customerReadDb
     SpringBoot_KafkaListener-.->|Eventual Consistency|customerReadDb
+```
+
+### Infraestructura
+
+La aplicación requiere de ciertos servicios para poder funcionar correctamente como las bases de datos, el conector de debezium y el message broker que en este caso es kafka. Dichos servicios están definidos usando docker-compose.
+
+
