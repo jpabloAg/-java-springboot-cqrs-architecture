@@ -53,7 +53,7 @@ graph LR;
 
 ### Infraestructura
 
-La aplicación requiere de ciertos servicios para poder funcionar correctamente como las bases de datos, el conector de debezium y el message broker que en este caso es kafka. Dichos servicios están definidos usando docker-compose.
+La aplicación requiere de ciertos servicios para poder funcionar correctamente como las bases de datos, el conector de debezium y el message broker que para esta ocasión es kafka. Dichos servicios están definidos usando docker-compose.
 
 ```yaml
 version: '3.5'
@@ -115,3 +115,7 @@ services:
  ```
  
  ### Referencias
+ 
+ - ["Using Debezium, CDC for Apache Kafka, with PostgreSQL and MongoDB"](https://blog.palark.com/debezium-cdc-for-apache-kafka/) articulo, Renat Khamadiev
+ - ["Patrones de diseño en la nube - Patrón CQRS"](https://learn.microsoft.com/es-es/azure/architecture/patterns/cqrs) blog, Microsoft
+ - ["Guide to Setting Up Apache Kafka Using Docker"](https://www.baeldung.com/ops/kafka-docker-setup) Guia, Baeldung
