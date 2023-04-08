@@ -33,9 +33,13 @@ graph LR;
     customerWriteDb[(PostgreSQL write store)]
     customerReadDb[(Redis read store)]
     SpringBoot_PublicApi-->CreateCustomer
+    SpringBoot_PublicApi-->CreateOrder
     SpringBoot_PublicApi-->GetCustomers
+    SpringBoot_PublicApi-->GetOrders
     GetCustomers-->customerReadDb
+    GetOrders-->customerReadDb
     CreateCustomer-->|Write New Customer|customerWriteDb
+    CreateOrder-->|Write New Order|customerWriteDb
     customerWriteDb-->|Event Detected|Debezium
     subgraph Kafka
     event3-->event2
