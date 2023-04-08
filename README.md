@@ -13,3 +13,35 @@ Este proyecto se puede utilizar como base para desarrollar aplicaciones de difer
 El objetivo de este proyecto es proporcionar una arquitectura de sistema adecuada para aplicaciones que requieran una alta escalabilidad y un alto rendimiento. Para ello, se ha utilizado la arquitectura CQRS (Command Query Responsibility Segregation) en conjunto con PostgreSQL para las escrituras y Redis para las lecturas.
 
 Además, se ha implementado una integración con Debezium para transmitir eventos a Kafka cada vez que se escriba en la base de datos PostgreSQL. De esta manera, se puede tener una visibilidad en tiempo real de las operaciones de escritura en la base de datos y proveer de un mecanismo para solventar la consistencia eventual en la base de datos de lectura.
+
+### Definiciones y Acrónimos
+
+- **CDC:** CDC (Capture Data Change) es una técnica que permite capturar los cambios en las bases de datos en tiempo real, lo que permite tener una visibilidad de los cambios que se están produciendo en la base de datos. Esto es especialmente útil en entornos donde se requiere una alta disponibilidad de los datos y una respuesta inmediata ante los cambios en los mismos. Como dato interesante, CDC es una buena estrateg+ia cuando se quiere integrar aplicaciones legacy con aplicaciones modernas.
+
+- **Debezium:** Debezium es una herramienta open source que permite capturar los cambios en las bases de datos en tiempo real y transmitirlos a sistemas de mensajería como Kafka. De esta forma, se puede tener una visibilidad en tiempo real de los cambios en la base de datos y reaccionar de manera inmediata ante ellos. Se lanzó en 2016 y actualmente es compatible con los siguientes DBMS: MySQL, PostgreSQL, MongoDB, SQL Server, Oracle e IBM Db2.
+
+- **Kafka:** Kafka es una plataforma de streaming de datos open source que permite la transmisión de mensajes de manera rápida y confiable a través de diferentes sistemas. Permite la integración de diferentes fuentes de datos y la transmisión en tiempo real de los mismos a diferentes destinos, lo que la hace especialmente útil en entornos de big data y análisis en tiempo real.
+
+- **PostgreSQL:** PostgreSQL es un sistema de gestión de bases de datos relacional open source que se destaca por su escalabilidad y fiabilidad.
+
+- **Redis:** Redis es una base de datos en memoria open source.
+
+### Arquitectura propuesta
+
+```mermaid
+graph LR;
+    customerWriteDb[(PostgreSQL write store)]
+    customerReadDb[(Redis read store)]
+    SpringBoot_PublicApi-->CreateCustomer
+    SpringBoot_PublicApi-->GetCustomers
+    GetCustomers-->customerReadDb
+    CreateCustomer-->|Write New Customer|customerWriteDb
+    customerWriteDb-->|Event Detected|Debezium
+    subgraph Kafka
+    event3-->event2
+    event2-->event1
+    end
+    Debezium-->Kafka
+    Kafka-->SpringBoot_KafkaListener
+    SpringBoot_KafkaListener-->|Write Projections|customerReadDb
+    SpringBoot_KafkaListener-.->|Eventual Consistency|customerReadDb
